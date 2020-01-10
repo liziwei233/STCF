@@ -55,7 +55,7 @@ namespace ROOT {
       ::MyRICHDetector *ptr = 0;
       static ::TVirtualIsAProxy* isa_proxy = new ::TInstrumentedIsAProxy< ::MyRICHDetector >(0);
       static ::ROOT::TGenericClassInfo 
-         instance("MyRICHDetector", ::MyRICHDetector::Class_Version(), "inc/MyRICHDetector.h", 16,
+         instance("MyRICHDetector", ::MyRICHDetector::Class_Version(), "inc/MyRICHDetector.h", 14,
                   typeid(::MyRICHDetector), ::ROOT::Internal::DefineBehavior(ptr, ptr),
                   &::MyRICHDetector::Dictionary, isa_proxy, 4,
                   sizeof(::MyRICHDetector) );
@@ -307,7 +307,7 @@ namespace ROOT {
       vector<string> *ptr = 0;
       static ::TVirtualIsAProxy* isa_proxy = new ::TIsAProxy(typeid(vector<string>));
       static ::ROOT::TGenericClassInfo 
-         instance("vector<string>", -2, "vector", 470,
+         instance("vector<string>", -2, "vector", 464,
                   typeid(vector<string>), ::ROOT::Internal::DefineBehavior(ptr, ptr),
                   &vectorlEstringgR_Dictionary, isa_proxy, 0,
                   sizeof(vector<string>) );
@@ -370,7 +370,7 @@ namespace ROOT {
       vector<double> *ptr = 0;
       static ::TVirtualIsAProxy* isa_proxy = new ::TIsAProxy(typeid(vector<double>));
       static ::ROOT::TGenericClassInfo 
-         instance("vector<double>", -2, "vector", 470,
+         instance("vector<double>", -2, "vector", 464,
                   typeid(vector<double>), ::ROOT::Internal::DefineBehavior(ptr, ptr),
                   &vectorlEdoublegR_Dictionary, isa_proxy, 0,
                   sizeof(vector<double>) );
@@ -433,7 +433,7 @@ namespace ROOT {
       vector<TH2F*> *ptr = 0;
       static ::TVirtualIsAProxy* isa_proxy = new ::TIsAProxy(typeid(vector<TH2F*>));
       static ::ROOT::TGenericClassInfo 
-         instance("vector<TH2F*>", -2, "vector", 470,
+         instance("vector<TH2F*>", -2, "vector", 464,
                   typeid(vector<TH2F*>), ::ROOT::Internal::DefineBehavior(ptr, ptr),
                   &vectorlETH2FmUgR_Dictionary, isa_proxy, 0,
                   sizeof(vector<TH2F*>) );
@@ -496,7 +496,7 @@ namespace ROOT {
       map<int,TGTextButton*> *ptr = 0;
       static ::TVirtualIsAProxy* isa_proxy = new ::TIsAProxy(typeid(map<int,TGTextButton*>));
       static ::ROOT::TGenericClassInfo 
-         instance("map<int,TGTextButton*>", -2, "map", 899,
+         instance("map<int,TGTextButton*>", -2, "map", 873,
                   typeid(map<int,TGTextButton*>), ::ROOT::Internal::DefineBehavior(ptr, ptr),
                   &maplEintcOTGTextButtonmUgR_Dictionary, isa_proxy, 0,
                   sizeof(map<int,TGTextButton*>) );

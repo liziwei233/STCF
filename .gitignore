@@ -170,4 +170,6 @@
 *.bin
 
 #dir:
-*/DESY-BeamTest/*
+1-RICH/2-BeamTest/data/DESY-BeamTest/*
+1-RICH/2-BeamTest/data/
+#*/DESY-BeamTest/*

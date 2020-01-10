@@ -8,8 +8,6 @@ MyBeamTestTrackAGET::MyBeamTestTrackAGET(int _id, int nx, int ny, double wx, dou
     fAllHit = 0;
     fHit[0] = 0;
     fHit[1] = 0;
-    fPed[0] = 0;
-    fPed[1] = 0;
     fCharge = 0;
 }
 
@@ -45,12 +43,6 @@ void MyBeamTestTrackAGET::ReadMapFile()
 
     mapFp.close();
 }
-
-/*
-void MyBeamTestTrackAGET::GenPedMap()
-{
-}
-*/
 
 //______________________________________________________________________________
 // Combine数据
@@ -174,8 +166,6 @@ bool MyBeamTestTrackAGET::FillDistribution(int i, MyBeamTestHitData *eventList)
         fAllHit2 = new TH2F(Form("AHit_2%d", id), Form("All hits for %s", name.Data()), 150, -30 + pos[0], 30 + pos[0], 150, -30 + pos[1], 30 + pos[1]);
         fHit[0] = new TH1F(Form("HitX%d", id), "X Strip hits for single event", 128, 0, 128);
         fHit[1] = new TH1F(Form("HitY%d", id), "Y Strip hits for single event", 128, 0, 128);
-        fPed[0] = new TH1F(Form("PedX%d", id), "X Strip pedestal", 128, 0, 128);
-        fPed[1] = new TH1F(Form("PedY%d", id), "Y Strip pedestal", 128, 0, 128);
         fCharge = new TH1F(Form("Charg%d", id), Form("Charge distribution of %s", name.Data()), 200, 0, 10000);
 
         fAllHit->SetXTitle("channel");

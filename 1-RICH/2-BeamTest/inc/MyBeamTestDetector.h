@@ -241,8 +241,7 @@ public:
     void SetPedRMS(int ibd, int ichip, int ichan, double nr) { pedRMS[CalID(ibd, ichip, ichan)] = nr; }
     double GetPedMean(int board, int chip, int chan) { return pedMean[CalID(IndexBD(board), IndexChip(chip), chan)]; }
     double GetPedRMS(int board, int chip, int chan) { return pedRMS[CalID(IndexBD(board), IndexChip(chip), chan)]; }
-    virtual void GenPedMap() = 0;
-    
+
     //
     // 纯虚函数：作图
     virtual void DrawHits(TGeoManager *geom, TGeoVolume *stop, TGeoMedium *med, MyBeamTestHitData *hit) = 0;
@@ -299,13 +298,11 @@ public:
     TString name;
     double siz[3];
     double pos[3];
-    double rot[2];       //in degree
-    double ROT[2];       //in rad
+    double rot[2];
+    double ROT[2];
     int Nstrp[2];        //实验室系下X/Y方向的strip条数
     double strip[2];     //实验室系下X/Y方向的strip条宽，[0]为平行X轴的条的宽度，[1]为平行与Y轴的条的宽度
     double LtoAnode = 0; //阳极板与轴心的距离
-    
-    TGeoMatrix* geoMatrix;
 
     //DST数据文件指针
     TFile *fFile = 0;

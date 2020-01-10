@@ -540,7 +540,6 @@ bool MyBeamTest::ReadRICHPed(TString fPedName)
                     vRICH[i]->SetPedMean(ii, jj, kk, mean);
                     vRICH[i]->SetPedRMS(ii, jj, kk, rms);
                 }
-        vRICH[i]->GenPedMap();
     }
     cout << "--> Pedestal file has been read.\n"
          << endl;
@@ -713,7 +712,6 @@ bool MyBeamTest::ReadTrackAGTPed(TString fPedName)
                     vTrkAGT[i]->SetPedMean(ii, jj, kk, mean);
                     vTrkAGT[i]->SetPedRMS(ii, jj, kk, rms);
                 }
-        vTrkAGT[i]->GenPedMap();
     }
     cout << "--> Pedestal file has been read.\n"
          << endl;

@@ -10,7 +10,6 @@
 #include "TRandom.h"
 #include "TDirectory.h"
 #include "TMath.h"
-#include "TMarker.h"
 #include "MyRICHDetector.h"
 #include "MyStyle.h"
 #include "TThread.h"
@@ -30,15 +29,6 @@ const Double_t gkMassMuon = 0.1134289257;      // GeV
 const Double_t pi = TMath::Pi();
 
 class MyDatabaseClass;
-
-class MyMCTruthClass
-{
-public:
-    double Xr, Yr;
-    double phi;
-    double lambda, z0;
-    int irad;
-};
 
 class MyCommonRICH
 {
@@ -167,14 +157,6 @@ public:
 
     //----------------------------
     // draw histograms
-    void DrawBeamHit()
-    {
-        double y = gDet->GetTotalLength() / tan(gDet->theta0);
-        TMarker *marker = new TMarker(0, y, 8);
-        marker->SetMarkerColor(kRed);
-        marker->Draw();
-    }
-
     void DrawDetHitMap(TString opt)
     {
         if (gDet->GetHitMap() != NULL)
@@ -256,7 +238,7 @@ public:
     void ReconstructRICHDetector(MyRICHDetector *det = 0);
     void ReconstructRICHDetector(int imom, int ithe, int ihypo) { ReconstructRICHDetector(gScanDetList[imom][ithe][ihypo]); }
     double ReconstructRICHBySolver(MyRICHDetector *det, double irad, double Xc, double Yc);
-    double ReconstructRICHByBeta(MyRICHDetector *det, double irad, double Xc, double Yc, vector<double> thklist, vector<double> reflist, vector<double> abslist, int verbose = 0);
+    double ReconstructRICHByBeta(MyRICHDetector *det, double irad, double Xc, double Yc, vector<double> thklist, vector<double> reflist, vector<double> abslist);
     double Findz0(MyRICHDetector *det, int irad, double Xc, double Yc, vector<double> thklist, vector<double> abslist);
     double FindPhi(MyRICHDetector *det, double Xc, double Yc, double X0, double Y0);
 
@@ -271,7 +253,7 @@ private:
     double ProjectToPixel(MyRICHDetector *, double xmin, double xmax, double ymin, double ymax, double lambda);
     double ProjectToPixel(MyRICHDetector *, double xmin, double xmax, double ymin, double ymax);
 
-    double PhotonGenFromRad(MyRICHDetector *det, int irad, int AbsFlag = 1, vector<MyMCTruthClass> *genData = 0);
+    double PhotonGenFromRad(MyRICHDetector *det, int irad, int AbsFlag = 1);
     double PhotonGenFromRadWithAbs(MyRICHDetector *det, int irad) { return PhotonGenFromRad(det, irad, 1); }
     double PhotonGenFromRadWithOutAbs(MyRICHDetector *det, int irad) { return PhotonGenFromRad(det, irad, 0); }
 

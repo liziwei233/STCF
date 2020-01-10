@@ -20,11 +20,6 @@ MyDatabaseClass::MyDatabaseClass(const char *path)
     MaterialList.push_back("Aerogel108");
     MaterialList.push_back("Aerogel109");
     MaterialList.push_back("Aerogel110");
-    MaterialList.push_back("Aerogel1022");
-    MaterialList.push_back("Aerogel1024");
-    MaterialList.push_back("Aerogel1027");
-    MaterialList.push_back("Aerogel1028");
-    MaterialList.push_back("Aerogel1030");
     MaterialList.push_back("Ar");
     MaterialList.push_back("N2");
     MaterialList.push_back("CH4");
@@ -45,7 +40,7 @@ MyDatabaseClass::MyDatabaseClass(const char *path)
     nDetector = (int)DetectorList.size();
     DetQEGraph.resize(nDetector);
 
-    // read data，注意检查路径
+    // read data
     //TString datpath = gSystem->WorkingDirectory() + TString("/database/");
     TString datpath = TString(path) + TString("/database/");
     for (int i = 0; i < nMaterial; i++)

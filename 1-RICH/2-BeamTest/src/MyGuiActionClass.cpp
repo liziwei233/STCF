@@ -540,7 +540,7 @@ void MyGuiActionClass::ExecButtonClick(Long_t bid, const char *cmdStr)
     if (bid == GenDSTRoot)
         DoGenDSTRoot(cmdStr);
     if (bid == CheckDSTRoot)
-        DoCheckDSTRoot(cmdStr);
+        DoCheckDSTRoot();
     if (bid == CombineDSTRoot)
         DoCombineDSTRoot(cmdStr);
     if (bid == LoadDSTRoot)
@@ -736,7 +736,6 @@ void MyGuiActionClass::DoShowSpecRICH(TString cmdStr)
     //1. 阳极上看到的光子击中
     gMyMainFrameGui->SwitchCanvas(1);
     gMyCommonRICH->DrawDetHitMap("colz");
-    gMyCommonRICH->DrawBeamHit();
     gMyMainFrameGui->UpdateCanvas(1);
     //sleep(1);
 
@@ -1271,15 +1270,8 @@ void MyGuiActionClass::DoGenDSTRoot(TString cmdStr)
     gMyBeamTest->ConvtTrackVMMRoot(gMyBeamTest->GetDSPath().Data());
 }
 
-void MyGuiActionClass::DoCheckDSTRoot(TString cmdStr)
+void MyGuiActionClass::DoCheckDSTRoot()
 {
-    //显示dst数据的噪声在实际位置上的分布
-    if (cmdStr != "TrackerVMM")
-    {
-        gMyBeamTest->ReadRICHPed(gMyBeamTest->GenPath(RICH, PED));
-        gMyBeamTest->ReadTrackAGTPed(gMyBeamTest->GenPath(TrackerAGET, PED));
-    }
-
     env->SetValue("checkDSTRoot", gMyBeamTest->GenPath(RICH, DST));
     env->Save();
     gSystem->Exec(Form("(root %s/data/checkDSTRoot.C)", realPath.Data()));
@@ -1548,8 +1540,9 @@ void MyGuiActionClass::DoDrawSelectedDet()
 void MyGuiActionClass::DoShowFCN()
 {
     SetDetectorParameters();
-    DoShowSpecRICH("yes");
+    gMyMainFrameGui->SwitchCanvas(1);
     gMyCommonRICH->DrawFCN(0);
+    gMyMainFrameGui->UpdateCanvas(1);
 }
 
 //______________________________________________________________________________

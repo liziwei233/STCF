@@ -131,10 +131,10 @@ void ReadRICHData2Root(vector<TString> datList, TString fRawName, int force)
     int boardstart = 0;
     int chipstart = 0;
     int type;
-    //bool headerFlag;
-    //bool trailerFlag;
-    double counting = 0;
-    //unsigned short triggerType;
+    bool headerFlag;
+    bool trailerFlag;
+    double counting;
+    unsigned short triggerType;
     int badNumber = 0;
     int event;
     UShort_t board;
@@ -179,7 +179,7 @@ void ReadRICHData2Root(vector<TString> datList, TString fRawName, int force)
             memblock = AGETExchange(memblock);
             if (memblock == 0xeeee)
             {
-                //headerFlag = 1;
+                headerFlag = 1;
                 counting = 0;
                 event = 0; // reset
                            //cout << "header" << endl;
@@ -200,8 +200,8 @@ void ReadRICHData2Root(vector<TString> datList, TString fRawName, int force)
                         bdList.push_back(board);
                 }
                 chip = (((memblock & 0x00f0) >> 4) - chipstart); //cout << "chip number = " << chip << endl;
-                //triggerType = (memblock & 0x000f);               //cout << "trigger type = " << triggerType << endl;
-                //                                                 //cout << "fixed number" << endl;// counting = 1;
+                triggerType = (memblock & 0x000f);               //cout << "trigger type = " << triggerType << endl;
+                                                                 //cout << "fixed number" << endl;// counting = 1;
             }
             else if (counting > 1 && counting < 6)
             {
@@ -224,7 +224,7 @@ void ReadRICHData2Root(vector<TString> datList, TString fRawName, int force)
             //else if (counting > 9 && counting < 521)
             else if (memblock == 0xffff)
             {
-                //trailerFlag = 1;
+                trailerFlag = 1;
                 if (wave.size() == 512)
                 {
                     fTree->Fill();
@@ -444,10 +444,10 @@ void ReadTrackAGTData2Root(vector<TString> datList, TString fRawName, int force)
     int boardstart = 0;
     int chipstart = 0;
     int type;
-    //bool headerFlag;
-    //bool trailerFlag;
-    double counting = 0;
-    //unsigned short triggerType;
+    bool headerFlag;
+    bool trailerFlag;
+    double counting;
+    unsigned short triggerType;
     int badNumber = 0;
     int event;
     UShort_t board;
@@ -492,7 +492,7 @@ void ReadTrackAGTData2Root(vector<TString> datList, TString fRawName, int force)
             memblock = AGETExchange(memblock);
             if (memblock == 0xeeee)
             {
-                //headerFlag = 1;
+                headerFlag = 1;
                 counting = 0;
                 event = 0; // reset
                            //cout << "header" << endl;
@@ -515,8 +515,8 @@ void ReadTrackAGTData2Root(vector<TString> datList, TString fRawName, int force)
                 }
 
                 chip = (((memblock & 0x00f0) >> 4) - chipstart); //cout << "chip number = " << chip << endl;
-                //triggerType = (memblock & 0x000f);               //cout << "trigger type = " << triggerType << endl;
-                //                                                 //cout << "fixed number" << endl;// counting = 1;
+                triggerType = (memblock & 0x000f);               //cout << "trigger type = " << triggerType << endl;
+                                                                 //cout << "fixed number" << endl;// counting = 1;
             }
             else if (counting > 1 && counting < 6)
             {
@@ -539,7 +539,7 @@ void ReadTrackAGTData2Root(vector<TString> datList, TString fRawName, int force)
             //else if (counting > 9 && counting < 521)
             else if (memblock == 0xffff)
             {
-                //trailerFlag = 1;
+                trailerFlag = 1;
                 if (wave.size() == 512)
                 {
                     fTree->Fill();
@@ -762,93 +762,15 @@ void GenerateAGETPed(TString fRawName, TString fPedName, vector<MyBeamTestTrackA
 
 //-------------------------------
 // Track-VMM Data to Raw-ROOT
-class vmmTDCData
-{
-public:
-    bool StoreData(vector<unsigned short> dat)
-    {
-        if (dat.size() != 16 || dat[0] != 0xAB || (dat[1] & 0xC0) != 0xC0)
-            return false;
-
-        trigID = ((dat[1] & 0x0F) << 12) | (dat[2] << 4) | ((dat[3] & 0xF0) >> 4);
-        trigBCID = (dat[3] & 0x0F << 8) | dat[4];
-        tdcValue = 1;
-        status = 1;
-        return true;
-    }
-    void Print()
-    {
-        if (!status)
-            return;
-        cout << "--> This is TDC data: triger ID = " << trigID << ", BCID = " << trigBCID << endl;
-    }
-    int status = 0;
-    int trigID = 0;
-    int trigBCID = 0;
-    int tdcValue = 0;
-};
-
-class vmmTLUData
-{
-public:
-    bool StoreData(vector<unsigned short> dat)
-    {
-        if (dat.size() != 16 || dat[0] != 0xFA || dat[1] != 0xFD || dat[14] != 0xAF || dat[15] != 0xDF)
-            return false;
-
-        trigID = (dat[2] << 8 | dat[3]);
-        status = 1;
-        return true;
-    }
-    void Print()
-    {
-        if (!status)
-            return;
-        cout << "--> This is TLU data: triger ID = " << trigID << endl;
-    }
-    int status = 0;
-    int trigID = 0;
-};
-
-class vmmDetData
-{
-public:
-    bool StoreData(vector<unsigned short> dat)
-    {
-        if (dat.size() != 16 || dat[0] != 0xEF || dat[1] != 0x0D || dat[15] != 0xFE)
-            return false;
-
-        board = dat[2] - 48;
-        BCID = VMMExchange((dat[3] & 0x0F) << 8 | dat[4]);
-        trigID = dat[5] << 8 | dat[6];
-        chip = BitAttraction(dat[7], 3, 1);
-        channel = BitAttraction2(dat[8], 6, 3);
-        PD0 = Reverse((BitAttraction(dat[8], 2, 1) << 8) | dat[9], 10);
-        TD0 = Reverse(dat[10], 8);
-        status = 1;
-        return true;
-    }
-    void Print()
-    {
-        if (!status)
-            return;
-        cout << "--> This is VMM data: triger ID = " << trigID << ", board=" << board << ", chip=" << chip << ", channel=" << channel << ", Q=" << PD0 << ", TD0=" << TD0 << ", BCID=" << BCID << endl;
-    }
-    int board = 0;
-    int chip = 0;
-    int channel = 0;
-    int trigID = 0;
-    int BCID = 0;
-    int PD0 = 0;
-    int TD0 = 0;
-    int status = 0;
-};
-
 void ReadTrackVMMData2Root(vector<TString> datList, TString fRawName, int force = 1);
 void ReadTrackVMMData2Root(vector<TString> datList, TString fRawName, int force)
 {
     if ((int)datList.size() == 0)
         return;
+
+    bool headerFlag;
+    bool trailerFlag;
+    double counting;
 
     int type;
     int event;
@@ -861,7 +783,7 @@ void ReadTrackVMMData2Root(vector<TString> datList, TString fRawName, int force)
 
     int length = sizeof(unsigned char);
     unsigned short memblock = 0;
-    vector<unsigned short> memlist;
+    unsigned int buffer = 0;
 
     if (force != 1)
     {
@@ -888,95 +810,19 @@ void ReadTrackVMMData2Root(vector<TString> datList, TString fRawName, int force)
     fTree2->Write();
 
     TString fHead(datList[0]);
-    TString fPath;
-    while (fHead.Index("/") != -1)
-    {
-        TString ftmp = fHead;
-        fPath += ftmp.Remove(ftmp.Index("/") + 1, ftmp.Length());
-        fHead.Remove(0, fHead.Index("/") + 1);
-    }
-    //fHead.ReplaceAll("1.bin", "");
+    fHead.ReplaceAll("1.bin", "");
 
-    //int bufferFlag = 0;
-    vector<vmmTDCData *> tdcList;
-    vector<vmmTLUData *> trgList;
-    vector<vmmDetData *> detList;
-
+    int bufferFlag = 0;
     for (int i = 0; i < (int)datList.size(); i++)
     {
-        TString fName = fPath + Form("/%d.bin", i + 1);
+        TString fName = fHead + Form("/%d.bin", i + 1);
         fstream InDat;
         InDat.open(fName, ios::in | ios::binary);
         cout << "--> Reading a new dat file-" << i << " : " << fName << endl;
 
-        //int ntot = 0;
         while (!InDat.eof())
         {
             InDat.read((char *)(&memblock), length);
-
-            //ntot++;
-            //cout << dec << ntot << " reading: " << hex << memblock << dec << endl;
-
-            if (memlist.size() < 16)
-            {
-                //cout << "    -> push" << endl;
-                memlist.push_back(memblock);
-                if (memlist.size() < 16)
-                    continue;
-            }
-            else
-            {
-                //cout << "     -> erase" << endl;
-                memlist.erase(memlist.begin());
-                memlist.push_back(memblock);
-            }
-
-            vmmTDCData *tdcData = new vmmTDCData();
-            vmmTLUData *trgData = new vmmTLUData();
-            vmmDetData *detData = new vmmDetData();
-
-            int stat = 0;
-            stat += tdcData->StoreData(memlist);
-            stat += trgData->StoreData(memlist);
-            stat += detData->StoreData(memlist);
-
-            if (stat != 1)
-            {
-                //cout << "      ";
-                //for (int i = 0; i < memlist.size(); i++)
-                //    cout << hex << memlist[i] << " ";
-                //cout << "     not a good one: " << stat << endl;
-                continue;
-            }
-            memlist.clear();
-
-            if (tdcData->status)
-            {
-                tdcList.push_back(tdcData);
-                //tdcData->Print();
-            }
-
-            if (trgData->status)
-            {
-                trgList.push_back(trgData);
-                //trgData->Print();
-            }
-
-            if (detData->status)
-            {
-                //store data
-                detList.push_back(detData);
-                //detData->Print();
-                event = detData->trigID;
-                board = detData->board;
-                chip = detData->chip;
-                PDO = detData->PD0;
-                BCID = detData->BCID;
-                TDO = detData->TD0;
-                fTree->Fill();
-            }
-
-            /*
             if (memblock == 0xEF)
             {
                 counting = -2;
@@ -1067,7 +913,6 @@ void ReadTrackVMMData2Root(vector<TString> datList, TString fRawName, int force)
             }
 
             counting++;
-            */
         }
     }
     cout << "--> Total entries = " << fTree->GetEntries() << endl;
