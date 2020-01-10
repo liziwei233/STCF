@@ -168,3 +168,6 @@
 *.mdat
 *.bak
 *.bin
+
+#dir:
+*/DESY-BeamTest/*
